@@ -1,0 +1,133 @@
+name: Native archive qualification
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-build:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        architecture: [x86, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native and cross toolchains
+        run: sudo apt-get update && sudo apt-get install -y autoconf automake mingw-w64 wixl msitools
+      - name: Build native Linux and Windows ARJ
+        shell: pwsh
+        run: ./build_windows.ps1 -Architecture '${{ matrix.architecture }}' -OutputDirectory '${{ runner.temp }}/arj-output' -ReferenceDirectory '${{ runner.temp }}/arj-linux'
+      - name: Test the native Linux build
+        shell: pwsh
+        run: ./packaging/test_roundtrip.ps1 -ArjPath '${{ runner.temp }}/arj-linux/arj' -WorkDirectory '${{ runner.temp }}/arjfixture' -CheckUnsafeNames
+      - name: Include complete matching source and build scripts
+        run: git archive --format=tar.gz -o '${{ runner.temp }}/arj-output/source.tar.gz' HEAD
+      - name: Build native MSI with managed system PATH
+        shell: pwsh
+        run: ./new_windows_msi.ps1 -BinaryDirectory '${{ runner.temp }}/arj-output' -SourceArchive '${{ runner.temp }}/arj-output/source.tar.gz' -OutputDirectory '${{ runner.temp }}/arj-msi' -Architecture '${{ matrix.architecture }}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: msi-${{ matrix.architecture }}
+          path: ${{ runner.temp }}/arj-msi/*.msi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-${{ matrix.architecture }}
+          path: ${{ runner.temp }}/arj-output/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ matrix.architecture }}
+          path: |
+            ${{ runner.temp }}/arj-linux/arj
+            ${{ runner.temp }}/arjfixture/trial.arj
+
+  windows-test:
+    needs: windows-build
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        architecture: [x86, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-${{ matrix.architecture }}
+          path: C:/arjtools
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-${{ matrix.architecture }}
+          path: C:/arjref
+      - name: Test native Windows ARJ and Linux archive exchange
+        shell: pwsh
+        run: ./packaging/test_roundtrip.ps1 -ArjPath C:/arjtools/arj.exe -WorkDirectory C:/arjfixture -ReferenceArchive (Get-ChildItem C:/arjref -Recurse -Filter trial.arj).FullName -CheckUnsafeNames
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-reference-${{ matrix.architecture }}
+          path: C:/arjfixture/trial.arj
+
+  reverse-compatibility:
+    needs: windows-test
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        architecture: [x86, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-reference-${{ matrix.architecture }}
+          path: /tmp/arjref
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-${{ matrix.architecture }}
+          path: /tmp/arjlinux
+      - name: Read the native Windows archive with Linux ARJ
+        shell: pwsh
+        run: |
+          $arj = (Get-ChildItem /tmp/arjlinux -Recurse -File -Filter arj).FullName
+          chmod +x $arj
+          ./packaging/test_roundtrip.ps1 -ArjPath $arj -ReferenceArchive /tmp/arjref/trial.arj
+
+  windows-msi-test:
+    needs: windows-build
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture: [x86, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: msi-${{ matrix.architecture }}
+          path: C:/arjpkg
+      - name: Install, repair, verify CMD/PowerShell PATH and uninstall
+        shell: pwsh
+        run: |
+          $package = (Get-ChildItem C:/arjpkg/*.msi).FullName
+          ./packaging/test_windows_msi.ps1 -Package $package -Architecture '${{ matrix.architecture }}'
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows-build, windows-test, reverse-compatibility, windows-msi-test]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Publish qualified portable packages, MSI and matching source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 packaging/prepare_release.py artifacts release
+          cd release
+          sha256sum *.zip *.msi *.tar.gz > SHA256SUMS
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "ARJ $GITHUB_REF_NAME for Windows" --notes-file ../packaging/RELEASE.md *.zip *.msi *.tar.gz SHA256SUMS
