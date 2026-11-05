@@ -8,14 +8,18 @@
 #ifndef CRC32_INCLUDED
 #define CRC32_INCLUDED
 
+/* The CRC and ARJ-SECURITY state is defined as 32-bit arithmetic; unsigned
+   long is 64 bits wide on LP64 hosts, so products and shifts would differ. */
+#include <stdint.h>
+
 /* The following are externals exported from assembly-language routines: */
 
-extern unsigned long crc32term;
+extern uint32_t crc32term;
 #ifdef TILED
  extern unsigned short crc32tab_lo[256];
  extern unsigned short crc32tab_hi[256];
 #else
- extern unsigned long crc32tab[256];
+ extern uint32_t crc32tab[256];
 #endif
 
 /* Platform-independent CRC macro */
@@ -31,8 +35,8 @@ extern unsigned long crc32term;
 void build_crc32_table();
 void crc32_for_block(char *block, unsigned int size);
 void crc32_for_string(char *str);
-unsigned long crc32_for_char(unsigned long crc32_term, unsigned char c);
-unsigned long rev_crc32_for_char(unsigned long crc32_term, unsigned char c);
-unsigned long afl_mul(unsigned long term, unsigned long multiplier);
+uint32_t crc32_for_char(uint32_t crc32_term, unsigned char c);
+uint32_t rev_crc32_for_char(uint32_t crc32_term, unsigned char c);
+uint32_t afl_mul(uint32_t term, uint32_t multiplier);
 
 #endif

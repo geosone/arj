@@ -8,19 +8,23 @@
 #ifndef ARJSEC_L_INCLUDED
 #define ARJSEC_L_INCLUDED
 
+/* The CRC and ARJ-SECURITY state is defined as 32-bit arithmetic; unsigned
+   long is 64 bits wide on LP64 hosts, so products and shifts would differ. */
+#include <stdint.h>
+
 /* Prototypes */
 
-int create_envelope(FILE *stream, unsigned long offset, int iter);
+int create_envelope(FILE *stream, uint32_t offset, int iter);
 
-void arjsec_term(unsigned long *block, unsigned long *dest, int iter);
-void arjsec_xor(unsigned long *dest, unsigned long *src);
-void arjsec_newblock(unsigned long *dest);
-void arjsec_invert(unsigned long *block);
-void arjsec_crcterm(unsigned long *block, unsigned char c);
-void arjsec_read(unsigned long *block, FILE *stream, unsigned long len);
+void arjsec_term(uint32_t *block, uint32_t *dest, int iter);
+void arjsec_xor(uint32_t *dest, uint32_t *src);
+void arjsec_newblock(uint32_t *dest);
+void arjsec_invert(uint32_t *block);
+void arjsec_crcterm(uint32_t *block, unsigned char c);
+void arjsec_read(uint32_t *block, FILE *stream, uint32_t len);
 
-void rev_arjsec_term(unsigned long *block, unsigned long *dest, int iter);
-void arjsec_revert(unsigned long *block);
+void rev_arjsec_term(uint32_t *block, uint32_t *dest, int iter);
+void arjsec_revert(uint32_t *block);
 
 #endif
 
