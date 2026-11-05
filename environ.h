@@ -918,6 +918,9 @@ void mem_stats();
 int file_exists(char *name);
 FILE *file_open(char *name, char *mode);
 void default_case_path(char *dest, char *src);
+#if SFX_LEVEL>=ARJ
+ int is_safe_member_path(char *path);
+#endif
 int uni_getch();
 unsigned long get_ticks();
 unsigned long file_getfree(char *name);

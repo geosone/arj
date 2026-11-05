@@ -2086,6 +2086,67 @@ FILE *file_open(char *name, char *mode)
 }
 #endif
 
+#if SFX_LEVEL>=ARJ
+#if TARGET==WIN32
+/* Returns 1 if one path component (len bytes at c) is unsafe to create under
+   Win32: control or reserved characters, drive/ADS colons, a trailing dot or
+   space (Win32 strips them, so "x." would alias "x") or a device name such as
+   CON or COM1, which Win32 also recognizes before an extension and ignores
+   spaces in front of it. */
+static int unsafe_win32_component(char *c, int len)
+{
+ char stem[8];
+ int i;
+
+ if(len>0&&(c[len-1]=='.'||c[len-1]==' '))
+  return(1);
+ for(i=0; i<len; i++)
+  if((unsigned char)c[i]<32||strchr(":<>\"|?*", c[i])!=NULL)
+   return(1);
+ for(i=0; i<len&&c[i]!='.'&&i<(int)sizeof(stem)-1; i++)
+  stem[i]=(char)toupper((unsigned char)c[i]);
+ if(i<len&&c[i]!='.')
+  return(0);                            /* Stem longer than any device name */
+ while(i>0&&stem[i-1]==' ')
+  i--;
+ stem[i]='\0';
+ if(!strcmp(stem, "CON")||!strcmp(stem, "PRN")||!strcmp(stem, "AUX")||
+    !strcmp(stem, "NUL")||!strcmp(stem, "CONIN$")||!strcmp(stem, "CONOUT$"))
+  return(1);
+ return(i==4&&(!strncmp(stem, "COM", 3)||!strncmp(stem, "LPT", 3))&&
+        ((stem[3]>='1'&&stem[3]<='9')||(unsigned char)stem[3]==0xB9||
+         (unsigned char)stem[3]==0xB2||(unsigned char)stem[3]==0xB3));
+}
+#endif
+
+/* Returns 1 if the member part of an output path (the part following the
+   operator's target directory) stays below that directory. validate_path()
+   only strips leading drivespecs, "..\" and separators, so a stored name like
+   "a/../../x" would otherwise escape it; with "e", entry_pos from a foreign
+   host's header may also select a leading separator. */
+int is_safe_member_path(char *path)
+{
+ char *c, *e;
+ int len;
+
+ if(path[0]==PATHSEP_DEFAULT||path[0]==PATHSEP_UNIX)
+  return(0);
+ for(c=path; *c!='\0'; c=(*e=='\0')?e:e+1)
+ {
+  for(e=c; *e!='\0'&&*e!=PATHSEP_DEFAULT&&*e!=PATHSEP_UNIX; e++)
+   ;
+  len=(int)(e-c);
+  if(len==2&&c[0]=='.'&&c[1]=='.')
+   return(0);
+  #if TARGET==WIN32
+   if(len>0&&!(len==1&&c[0]=='.')&&unsafe_win32_component(c, len))
+    return(0);
+  #endif
+ }
+ return(1);
+}
+#endif
+
 /* Convert the given path to uppercase and validate it */
 
 #if SFX_LEVEL>=ARJSFXV
@@ -3879,7 +3940,7 @@ void file_chdir(char *dir)
 
    if((dir[l-1]==PATHSEP_DOS||dir[l-1]==PATHSEP_UNIX)&&(dir[1]!=':'||l!=3))
    {
-    tmp_dir=malloc(l);
+    tmp_dir=malloc(l+1);                /* strcpy() also writes the NUL */
     if(tmp_dir==NULL)                   /* ASR fix 29/10/2000 */
      return;
     strcpy(tmp_dir, dir);
