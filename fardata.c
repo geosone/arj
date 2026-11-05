@@ -52,7 +52,7 @@ int error_proc(FMSG *errmsg, ...)
   /* Check if the message could have a standard error code */
   if(errno!=0&&is_std_error(errmsg))
   {
-   msg_cprintf(0, lf);
+   msg_cprintf(0, "\n");
    error_report();
   }
  #endif
@@ -190,6 +190,7 @@ int msg_sprintf(char *str, FMSG *fmt, ...)
 
 /* Length-limited strlen() */
 
+#ifndef HAVE_STRNLEN
 static int strnlen(const char FAR *s, int count)
 {
  const char FAR *sc;
@@ -198,6 +199,7 @@ static int strnlen(const char FAR *s, int count)
   ;
  return(sc-s);
 }
+#endif
 
 /* Hex representation of digits */
 
@@ -377,10 +379,10 @@ static void flush_cbuf(int ccode, char *text)
     {
      #if SFX_LEVEL>=ARJSFXV
       fprintf(new_stdout, strform, n_text);
-      fprintf(new_stdout, lf);
+      fprintf(new_stdout, "\n");
      #else
       printf(strform, n_text);
-      printf(lf);
+      printf("\n");
      #endif
     }
     else
@@ -391,13 +393,13 @@ static void flush_cbuf(int ccode, char *text)
      #ifdef NEED_CRLF
       scr_out("\r");
      #endif
-     scr_out(lf);
+     scr_out("\n");
     }
     if(!no_colors)
      textcolor(color_table[ccode&H_COLORMASK].color);
    #else
     printf(strform, n_text);
-    printf(lf);
+    printf("\n");
    #endif
    n_text=t_text+1;
    #if SFX_LEVEL>=ARJ

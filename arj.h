@@ -12,7 +12,6 @@
 #include "bindings.h"
 #include "environ.h"
 #include "defines.h"
-#include "date_sig.h"
 #include "arjtypes.h"
 
 #if SFX_LEVEL!=ARJSFXJR

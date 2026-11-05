@@ -11,6 +11,10 @@
 #include "arjtypes.h"
 #include "filelist.h"
 
+/* A safe strcpy() */
+
+#define safe_strcpy(dest, src) memmove(dest, src, strlen(src)+1);
+
 /* ASCIIZ string copy macro */
 
 #define strcpyn(dest, src, n)      \

@@ -214,7 +214,7 @@ static void final_cleanup(void)
   freopen(dev_con, m_w, stdout);
  #if SFX_LEVEL>=ARJSFXV
   if(ferror(stdout))
-   msg_fprintf(stderr, M_DISK_FULL);
+   msg_fprintf(stderr, "Can't write file. Disk full?");
   if(debug_enabled&&strchr(debug_opt, 't')!=NULL)
   {
    ticks=get_ticks()-ticks;
@@ -244,7 +244,7 @@ void show_sfx_logo()
   for(nptr=tptr=archive_name; *tptr!='\0'; tptr++)
    if(strchr(path_separators, *tptr)!=NULL)
     nptr=tptr+1;
-  msg_cprintf(0, M_ARJSFX_BANNER, M_VERSION, nptr, build_date);
+  msg_cprintf(0, M_ARJSFX_BANNER, M_VERSION, nptr);
   msg_cprintf(0, lf);
   logo_shown=1;
  }

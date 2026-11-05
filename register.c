@@ -205,7 +205,7 @@ int main(int argc, char **argv)
  char reg_source[200];
  int i;
 
- printf(M_REGISTER_BANNER);
+ fputs(M_REGISTER_BANNER, stdout);
  integrity_pattern[0]--;
  build_crc32_table();
  if(argc!=2)

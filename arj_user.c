@@ -1059,7 +1059,7 @@ static void finish_processing(int cmd)
      if(recover_file(tmp_archive_name, nullstr, tmp_tmp_filename, protected, eof_pos))
      {
       msg_cprintf(H_HL, M_CANT_FIND_DAMAGE, archive_name);
-      printf(lf);
+      printf("\n");
      }
      else
      {
@@ -1294,7 +1294,7 @@ static void finish_processing(int cmd)
    if(recover_file(archive_name, nullstr, nullstr, protected, eof_pos))
    {
     msg_cprintf(H_HL, M_CANT_FIND_DAMAGE, archive_name);
-    printf(lf);
+    printf("\n");
    }
    else
    {
@@ -1327,7 +1327,7 @@ static void finish_processing(int cmd)
     msg_cprintf(0, M_CHAPTERS_ON);
    else if(chapter_mode==CHAP_REMOVE)
     msg_cprintf(0, M_CHAPTERS_OFF);
-   msg_cprintf(0, strform, lf);
+   msg_cprintf(0, strform, "\n");
   }
   if(cmd==ARJ_CMD_COPY&&protfile_option&&!arjprot_tail)
    msg_cprintf(0, M_ARJPROT_DISABLED);
@@ -2303,7 +2303,7 @@ void process_archive()
   timestamp_to_str(timetext, &ftime_stamp);
   msg_cprintf(H_HL|H_NFMT, M_ARCHIVE_CREATED, timetext);
   if(show_ansi_comments)
-   printf(cmt_ptr);
+   fputs(cmt_ptr, stdout);
   else
    display_comment(cmt_ptr);
   /* The sfx_setup() occurs here */

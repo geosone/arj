@@ -935,7 +935,7 @@ static int convert_archive(char *name)
  msg_cprintf(H_HL|H_NFMT, M_OLD_SIZE, old_fsize);
  msg_cprintf(H_HL|H_NFMT, M_NEW_SIZE, new_fsize);
  msg_cprintf(H_HL|H_NFMT, M_SAVINGS_SIZE, gain);
- printf(lf);
+ printf("\n");
  total_old_fsize+=old_fsize;
  total_new_fsize+=new_fsize;
  total_files++;
@@ -1294,7 +1294,7 @@ int main(int argc, char **argv)
 #ifdef COLOR_OUTPUT
  no_colors=redirected=!is_tty(stdout);
 #endif
- msg_cprintf(0, M_REARJ_BANNER, build_date);
+ msg_cprintf(0, M_REARJ_BANNER);
  #ifdef USE_TZSET
   tzset();
  #endif

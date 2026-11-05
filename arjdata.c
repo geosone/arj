@@ -204,13 +204,6 @@ void date_fmt(char *dest)
  #endif
 }
 
-/* A safe strcpy() */
-
-static void safe_strcpy(char *dest, char *src)
-{
- memmove(dest, src, strlen(src)+1);
-}
-
 /* Context substitution routine */
 
 char *expand_tags(char *str, int limit)
@@ -232,7 +225,7 @@ char *expand_tags(char *str, int limit)
   {
    if(*(p+1)==TAG_CHAR)
    {
-    strcpy(p, p+1);
+    safe_strcpy(p, p+1);
     p++;
    }
    else if(*(p+1)==TAG_SPECIAL_BEGIN&&(et=strchr(p+3, TAG_SPECIAL_END))!=NULL)

@@ -696,7 +696,7 @@ int resolve_longname(char *dest, char *name)
     tmp_name[st_len]='\0';
     if(tmp_name[0]==0xFD&&tmp_name[1]==0xFF)
     {
-     strcpy(tmp_name, (char *)tmp_name+4);
+     safe_strcpy(tmp_name, (char *)tmp_name+4);
      st_len-=4;
     }
     if(st_len==0||st_len+entry>=FILENAME_MAX)

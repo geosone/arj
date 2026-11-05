@@ -54,6 +54,7 @@
  #include <utime.h>
  #include <sys/time.h>                  /* LIBC high-resolution timing */
  #include <sys/resource.h>              /* Priority control */
+ #include <sys/wait.h>
  #if defined(linux)
   #include <sys/ioctl.h>
   #include <sys/statfs.h>
@@ -1087,6 +1088,8 @@ static char *validate_path(char *name)
   if(action!=VALIDATE_DRIVESPEC)
   {
 #endif
+   while (name[0]!='\0'&&
+          (name[0]=='.'||name[0]==PATHSEP_DEFAULT||name[0]==PATHSEP_UNIX)) {
    if(name[0]=='.')
    {
     if(name[1]=='.'&&(name[2]==PATHSEP_DEFAULT||name[2]==PATHSEP_UNIX))
@@ -1096,6 +1099,7 @@ static char *validate_path(char *name)
    }
    if(name[0]==PATHSEP_DEFAULT||name[0]==PATHSEP_UNIX)
     name++;                             /* "\\" - revert to root */
+   }
 #if SFX_LEVEL>=ARJSFXV
   }
  }
@@ -1775,7 +1779,8 @@ int file_test_access(char *name)
   memset(&flk, 0, sizeof(flk));
   rc=fcntl(handle, F_GETLK, &flk);
   close(handle);
-  return(((rc==-1&&errno!=EINVAL)||(rc!=1&&flk.l_type==F_RDLCK))?-1:0);
+  return(((rc==-1&&errno!=EINVAL&&errno!=ENOSYS)||
+          (rc!=1&&flk.l_type==F_RDLCK))?-1:0);
  #endif
 }
 #endif

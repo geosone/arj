@@ -1,0 +1,5 @@
+Version: 5
+
+Source: https://sf.net/arj/
+Matching-Pattern: arj-(.*)\.tar\.[xg]z
+Update-Script: uupdate

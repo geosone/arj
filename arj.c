@@ -832,7 +832,7 @@ int main(int argc, char *argv[])
  if((tmp_stdout=new_stdout)==new_stderr&&!is_registered)
   new_stdout=stderr;
  msg_strcpy(strcpy_buf, M_VERSION);
- msg_cprintf(0, M_ARJ_BANNER, M_ARJ_BINDING, strcpy_buf, build_date);
+ msg_cprintf(0, M_ARJ_BANNER, M_ARJ_BINDING, strcpy_buf);
  if(!is_registered&&!msg_strcmp((FMSG *)(regdata+REG_KEY2_SHIFT), M_REG_TYPE))
   msg_cprintf(0, M_REGISTERED_TO, regdata+REG_NAME_SHIFT);
  else
@@ -1169,7 +1169,7 @@ int main(int argc, char *argv[])
      if(strlen(tmp_ptr)<=121)
       tmp_ptr[0]='\0';
      else if(tmp_ptr[120]==' ')
-      strcpy(tmp_ptr, tmp_ptr+121);
+      safe_strcpy(tmp_ptr, tmp_ptr+121);
     }
     if(cmd==ARJ_CMD_ORDER&&strpbrk(tmp_ptr, wildcard_pattern)!=NULL)
      error(M_ORDER_WILDCARD);

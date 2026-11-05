@@ -347,7 +347,7 @@ int main(int argc, char **argv)
  expand_tags(buf, sizeof(buf)-1);
  if((p=strchr(buf, '.'))!=NULL)
  {
-  strcpy(p, p+1);
+  safe_strcpy(p, p+1);
   if((p=strchr(buf, '.'))!=NULL)
    *p='\0';
  }

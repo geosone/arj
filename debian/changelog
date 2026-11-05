@@ -1,0 +1,537 @@
+arj (3.10.22-29) unstable; urgency=medium
+
+  * Use URL instead of FSF postal address for GPL in debian/copyright.
+  * Remove «Rules-Requires-Root: no», which is the current default.
+  * Remove «Priority: optional», which is the current default.
+  * Switch to debian/watch version 5.
+  * Switch to Standards-Version 4.7.3 (no changes needed).
+  * Remove versioned Build-Depends on dpkg-dev, satisfied since Debian trixie.
+  * Remove very-long-line-length-in-source-file lintian overrides that no
+    longer get emitted.
+  * Add missing metadata for a patch.
+  * Use an URL for Bugs-Debian field in patch instead of just the number.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 15 Feb 2026 14:16:59 +0100
+
+arj (3.10.22-28) unstable; urgency=medium
+
+  * Update cross-compilation patch to fix cross builds by correctly passing
+    all _FOR_BUILD flags to the CC_FOR_BUILD calls.
+    Based on a patch by Helmut Grohne <helmut@subdivi.de>. Closes: #1083108
+  * Switch to Standards-Version 4.7.0 (no changes needed).
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 03 Oct 2024 04:17:29 +0200
+
+arj (3.10.22-27) unstable; urgency=medium
+
+  * Wrap fields in debian/tests/control.
+  * Switch from future=+lfs to abi=+lfs build flags feature, and Build-Depends
+    on dpkg-dev >= 1.22.0.
+  * Fix implicit function declarations by including a missing header and
+    passing -D_GNU_SOURCE=1 in CPPFLAGS.
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 12 Mar 2024 05:46:21 +0100
+
+arj (3.10.22-26) unstable; urgency=medium
+
+  * Add upstream metadata file.
+  * Switch to Standards-Version 4.6.2 (no changes needed).
+  * Add source lintian-overrides.
+  * Do not trim debian/changelog.
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 17 Jan 2023 23:57:30 +0100
+
+arj (3.10.22-25) unstable; urgency=medium
+
+  * Switch to Standards-Version 4.6.0 (no changes needed).
+  * Move Source field after Format in debian/copyright.
+  * Use spaces around Makefile assignment operator.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 22 Jan 2022 21:48:20 +0100
+
+arj (3.10.22-24) unstable; urgency=medium
+
+  * Remove dpkg-dev from Build-Depends, satisfied in stable.
+  * Switch to Standards-Version 4.5.1 (no changes needed).
+  * Switch to debhelper compatibility level 13.
+  * Add missing Forwarded information to patches lacking it.
+  * Do not pass ChangeLog to dh_installchangelogs now handled automatically.
+  * Fix configure.in to make it possible to run autoreconf on it.
+  * Move files to clean from debian/rules to debian/clean.
+  * Remove automatically created directories from debian/arj.dirs.
+  * Switch to dh sequencer.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 24 Dec 2020 17:43:18 +0100
+
+arj (3.10.22-23) unstable; urgency=medium
+
+  * Fix cross-building by fixing a typo in a Makefile pattern rule.
+    Thanks to Helmut Grohne <helmut@subdivi.de>. Closes: #934470
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 13 Aug 2019 16:13:43 +0200
+
+arj (3.10.22-22) unstable; urgency=medium
+
+  * Set TZ to UTC0 for both date and arj calls when dealing with the help.arj
+    embedded into arj itself, so that we finally get reproducible output.
+  * Change several variables from unsigned long to time_t, to pass
+    appropriate pointers when calling localtime() or gmtime(), which fixes
+    various segfaults on x32.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 11 Aug 2019 05:34:58 +0200
+
+arj (3.10.22-21) unstable; urgency=medium
+
+  * Instead of fixing up unreproducible metadata in the help.arj embedded
+    into the arj program, just stop recording its file attributes altogether.
+  * Update debian/rules:
+    - Rename conf_gnu_type to confflags.
+    - Fold DEBUG and STRIP variables into a single buildvars, so that we do
+      not stomp over make variables with incompatible semantics.
+  * Fix cross-building support:
+    - Set CROSS_BUILDING variable during configure.
+    - Set CC_FOR_BUILD variable during configure.
+    - Check for a strip build tool during configure, and use that instead of
+      hardcoding "strip" in the makefile.
+    - Use CC_FOR_BUILD for all tools executed at build time.
+    - When cross-building build an additional arj program for the build
+      architecture, so that we can execute it to compress the help.arj that
+      we embed into the host arj.
+    - Include dpkg's buildtools.mk and pass CC and CC_FOR_BUILD to the build
+      system.
+    - Remove now obsolete comment about upstream build system not supporting
+      cross-building.
+  * Update debian/watch:
+    - Use tabs as field delimiters.
+    - Remove outdated heading field titles.
+    - Match on .xz in addition to .gz, even if it's unlikely upstream will
+      release such a thing.
+  * Switch to Standards-Version 4.4.0 (no changes needed).
+  * Switch to debhelper compatibility level 12.
+  * Switch from debian/compat to debhelper-commpat in Build-Depends.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 11 Jul 2019 10:07:18 +0200
+
+arj (3.10.22-20) unstable; urgency=medium
+
+  * Change -hdo debug switch to also set the files atime and ctime.
+  * Extend autopkgtest, and remove superficial restriction.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 11 Mar 2019 00:16:58 +0100
+
+arj (3.10.22-19) unstable; urgency=medium
+
+  * Use the -hdo debug switch for the help.arj embedded into the arj program
+    to set the archive timestamp based on the SOURCE_DATE_EPOCH. This makes
+    the binary package reproducible.
+  * Add a superficial autopkgtest for the arj command.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 09 Mar 2019 05:01:01 +0100
+
+arj (3.10.22-18) unstable; urgency=medium
+
+  * Fix typo in package description.
+  * Namespace debhelper files with package name.
+  * Add spaces around make variable assignments in debian/rules.
+  * Add comment on Build-Depends for the versioned dpkg-dev requirement.
+  * Switch to debhelper compatibility level 11.
+  * Bump Standards-Version to 4.3.0 (no changes needed).
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 10 Feb 2019 17:09:19 +0100
+
+arj (3.10.22-17) unstable; urgency=medium
+
+  * Bump Standards-Version to 4.1.1 (no changes needed).
+  * Switch sf.net URLs from http to https.
+  * Switch from broken getconf cross interface to future=+lfs build flags.
+  * Merge debian/rules binary-common target into binary-arch.
+  * Switch to debian/watch format version 4.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 05 Nov 2017 05:00:15 +0100
+
+arj (3.10.22-16) unstable; urgency=medium
+
+  * Line-wrap dependency fields.
+  * Bump Standards-Version to 4.1.0 (no changes needed).
+  * Switch to debhelper compatibility level 10.
+  * Use the dh_update_autotools_config command instead of updating the
+    config.* files manually, and bump the debhelper Build-Depends version
+    to the one that can handle ancient config.* files.
+  * Move location of GPL-2 in Debian systems into a Comment field in
+    debian/copyright.
+  * Fix cross building by setting the CC detected in configure in the
+    generated makefile. Thanks to Helmut Grohne <helmut@subdivi.de>.
+    Closes: #875567
+  * Remove the build date from resulting generated binary. This makes
+    the package build more deterministic, and fixes cross building by
+    not running a build tool compiled for the host.
+    Thanks to Helmut Grohne <helmut@subdivi.de>. Closes: #875568
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 15 Sep 2017 09:32:49 +0200
+
+arj (3.10.22-15) unstable; urgency=medium
+
+  * Use https for hadrons.org URLs.
+  * Bump Standards-Version to 3.9.8 (no changes needed).
+  * Switch to the dpkg makefile fragments in debian/rules.
+  * Always pass -fPIC and -shared as last options when building the shared
+    object plugin.
+  * Enable all hardening flags.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 04 Jun 2016 00:54:25 +0200
+
+arj (3.10.22-14) unstable; urgency=low
+
+  * Use https for the debian/copyright Format and Source URLs.
+  * Switch Vcs-Browser to a cgit URL.
+  * Now using Standards-Version 3.9.6 (no changes needed).
+  * Strip .comment and .note sections from executables.
+  * Fix out-of-bounds read access due to an index overflow, from controlled
+    input data in an archive. (Closes: #783948)
+  * Enable LFS, using getconf to pass the correct build flags.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 02 Jul 2015 03:11:36 +0200
+
+arj (3.10.22-13) unstable; urgency=high
+
+  * Fix buffer overflow from size under user control, causing free() on an
+    invalid pointer. (Closes: #774015)
+  * Fix absolute path directory traversal. Fixes CVE-2015-0557.
+    (Closes: #774435)
+  * Fix symlink directory traversal. Fixes CVE-2015-0556. (Closes: #774434)
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 28 Mar 2015 04:22:18 +0100
+
+arj (3.10.22-12) unstable; urgency=low
+
+  * Remove package creation information from debian/copyright.
+  * Switch debian/copyright to machine-readable format 1.0.
+  * Switch to debhelper compatibility level 9.
+  * Now using Standards-Version 3.9.5 (no changes needed).
+  * Fix self integrity check command on 64-bit systems.
+    Thanks to B Watson <yalhcru@gmail.com>.
+  * Add patch description headers.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 08 Aug 2014 00:54:18 +0200
+
+arj (3.10.22-11) unstable; urgency=low
+
+  * Now using Standards-Version 3.9.4 (no changes needed).
+  * Set the static const intergrity_identifier variable as volatile instead
+    of building the file with -O0 to avoid the compiler optimizing it away,
+    so that we can use standard flags everywhere.
+  * Fix clean target by checking existence of GNUmakefile instead of Makefile.
+  * Fix build failure on GNU/Hurd, by handling unimplemented fcntl(F_GETLK).
+  * Fix upstream build system to honour CPPFLAGS and LDFLAGS.
+  * Fix format security errors.
+  * Switch to use dpkg-buildflags to set CPPFLAGS, CFLAGS and LDFLAGS,
+    thus enabling hardening flags. (Closes: #673479)
+  * Support nostrip build option, by changing the upstrem build system to
+    optionally strip the binaries after the linking stage and before their
+    preprocessing. (Closes: #436473)
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 10 May 2013 05:01:06 +0200
+
+arj (3.10.22-10) unstable; urgency=low
+
+  * Fix build failure on GNU/Hurd due to missing -ldl, by adding “gnu*” to
+    the configure case handling libdl linking.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 28 Feb 2011 04:52:17 +0100
+
+arj (3.10.22-9) unstable; urgency=low
+
+  * Use a safe strcpy for overlapping strings, among others fixes a build
+    problem with a mangled generated .c file by msgbind (thus FTBFS), and
+    CRC errors at run-time. (Closes: #590354)
+  * Now using Standards-Version 3.9.1 (no changes needed).
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 26 Jul 2010 15:18:11 +0200
+
+arj (3.10.22-8) unstable; urgency=low
+
+  * Switch to source format “3.0 (quilt)”:
+    - Remove quilt from Build-Depends.
+    - Remove quilt.make include from debian/rules.
+    - Remove patch and unpatch targets from debian/rules.
+    - Remove now unneeded debian/README.source.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 02 Dec 2009 21:27:38 +0100
+
+arj (3.10.22-7) unstable; urgency=low
+
+  * Switch to debhelper compatibility level 7.
+  * Use dh_prep instead of “dh_clean -k”.
+  * Use $(filter ...) instead of $(findstring ...) to extract space separated
+    options from DEB_BUILD_OPTIONS in debian/rules.
+  * Now using Standards-Version 3.8.3 (no changes needed).
+  * Detect and conditionally use system strnlen function. This fixes build
+    failures when the system has eglibc 2.10. (Closes: #546475)
+  * Add misc:Depends substvar to arj Depends.
+  * Update config.guess and config.sub before running configure and remove
+    them on clean to avoid shipping them on the diff.
+  * Build-Depend on autotools-dev to guarantee up to date config.guess and
+    config.sub files.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 13 Sep 2009 22:16:12 +0200
+
+arj (3.10.22-6) unstable; urgency=low
+
+  * Update packaging Vcs fields to the new URL.
+  * Remove DPATCHLEVEL variable from patches.
+  * Refresh patches with -pab.
+  * Add a debian/README.source file.
+  * Now using Standards-Version 3.8.0.
+  * Refer to GPL-2 from common-licenses instead of just GPL.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 22 Jun 2008 05:23:35 +0300
+
+arj (3.10.22-5) unstable; urgency=low
+
+  * Remove packaging svn information from debian/copyright.
+  * Cleanup debian/copyright:
+    - Change 'Copyright' to 'Copyright Holders'.
+    - Use UTF-8 copyright symbol.
+  * Refer to original author Robert K. Jung in the manual page.
+    - doc_refer_robert_k_jung.patch: New file. (Closes: #456275)
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 29 May 2008 04:04:06 +0300
+
+arj (3.10.22-4) unstable; urgency=low
+
+  * Do not ignore make errors on 'debian/rules clean'.
+  * Add Vcs-Browser and Vcs-Svn fields.
+  * Add Homepage field.
+  * Now using Standards-Version 3.7.3 (no changes needed).
+  * Call configure with autotools-dev recommended --build and --host options.
+  * Remove irrelevant commented out debhelper commands.
+  * Remove Tag field, it's better maintained outside the package.
+  * Do not directly use the QA SourceForge redirector, instead use an URL
+    to sf.net. (Closes: #453532)
+  * Fix upstream Makefile to support parallel builds.
+    - 004_parallel_build.patch: New file.
+  * Move patch dependency in debian/rules from gnu/configure target to
+    gnu/configure.in.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 07 Dec 2007 06:12:20 +0200
+
+arj (3.10.22-3) unstable; urgency=low
+
+  * Switched to quilt:
+    - Add new debian/patches/series file.
+    - Add Build-Depends on 'quilt (>= 0.40)'.
+    - Include quilt.make from debian/rules.
+    - Make clean a single colon target and depend on unpatch in debian/rules.
+    - Remove now unused debian/patch.mk.
+  * Split autoconf and configure targets.
+  * Do not remove configure-stamp, as it's not created anymore.
+  * Rename the build target to build-arch, add a build-indep target and a
+    build one which depends on both.
+  * Switch to debhelper compatibility level 5.
+  * Now using Standards-Version 3.7.2 (no changes needed).
+  * Get rid of brace expansion bashisms in debian/rules.
+  * Add a Tag: field to the binary package, using the data from debtags.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 20 Apr 2007 03:03:26 +0300
+
+arj (3.10.22-2) unstable; urgency=low
+
+  * Make the code 64 bit clean. (Closes: #339815)
+    - 003_64_bit_clean.patch: New patch.
+  * Remove unused INSTALL variables and move nostrip comment just before
+    the commented dh_strip command from debian/rules.
+  * Reindent debian/copyright.
+  * Update FSF's address.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 24 Nov 2005 03:38:31 +0200
+
+arj (3.10.22-1) unstable; urgency=low
+
+  * New Upstream Release.
+    - 001_arches_align.patch: Synced.
+    - 002_kbsd_build.patch: Integrated upstream. Removed.
+    - 003_gcc34_static_const.patch: Likewise.
+    - 004_doc_typos.patch: Likewise.
+  * Update watch file to version 3 (no changes needed).
+  * Use new QA SourceForge watch redirector.
+  * Do not build integr.o with optimizations, otherwise gcc-4.0 removes
+    the static const variable. (Closes: #318366)
+    - 002_no_remove_static_const.patch: New file.
+  * Now using Standards-Version 3.6.2 (no changes needed).
+  * Removed transitional dummy package unarj.
+  * Clean up debian/rules.
+
+ -- Guillem Jover <guillem@debian.org>  Thu,  4 Aug 2005 23:00:51 +0300
+
+arj (3.10.21-4) unstable; urgency=low
+
+  * Fix typos in documentation. (Closes: #309875, #309876)
+    - 004_doc_typos.patch: New.
+    Thanks to A Costa <agcosta@gis.net>.
+
+ -- Guillem Jover <guillem@debian.org>  Sat,  4 Jun 2005 06:16:35 +0300
+
+arj (3.10.21-3) unstable; urgency=low
+
+  * Fix Subversion repository URL.
+  * Fix build failure on GNU/k*BSD. (Closes: #303945)
+    - 002_kbsd_build.patch: New.
+    Thanks to Aurelien Jarno <aurel32@debian.org>.
+  * Mark an unreferenced variable as const otherwise gcc 3.4 removes it.
+    (Closes: #283913)
+  * Do not use a stamp file for configure.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 15 May 2005 18:10:22 +0300
+
+arj (3.10.21-2) unstable; urgency=low
+
+  * Fixed the watch file.
+  * Make references to Debian, system neutral.
+  * Do not use a build file stamp.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 15 Nov 2004 11:41:51 +0100
+
+arj (3.10.21-1) unstable; urgency=low
+
+  * New Upstream Release.
+  * Provide a patch target instead of pre-build.
+    - debian/patch.mk: Likewise.
+    - debian/rules: Fix accordingly.
+  * Added the location of the Subversion repo used for the packages.
+    - debian/copyright.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 27 Jun 2004 08:07:09 +0200
+
+arj (3.10.20-1) unstable; urgency=low
+
+  * New Upstream Release.
+    - 002_statsfs.patch: Integrated upstream. Patch removed.
+    - 003_fix_CFLAGS.patch: Likewise.
+    - 004_fix_warnings.patch: Likewise.
+  * Fixed patches:
+    - 001_arches_align.patch: Properly test for alignment and endianess.
+  * Build binary independent packages only in binary-indep target.
+    (Closes: #244395)
+  * debian/copyright: Updated copyright year.
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 27 Apr 2004 11:42:45 +0200
+
+arj (3.10.19-2) unstable; urgency=low
+
+  * Added patches:
+    - 001_arches_align.patch: Correct build failure on ia64 due to unaligned
+      memory access.
+    - 004_fix_warnings.patch: Fix compilation warnings.
+  * Allow user to override CFLAGS:
+    - debian/rules: Likewise.
+    - 003_fix_CFLAGS.patch: New patch. Likewise.
+  * debian/copyright: Added "License:".
+
+ -- Guillem Jover <guillem@debian.org>  Fri,  9 Apr 2004 23:12:05 +0200
+
+arj (3.10.19-1) unstable; urgency=low
+
+  * New Upstream Release.
+    - 000_fPIC.patch: Integrated upstream. Removed file.
+    - 001_arches_align.patch: Likewise.
+    - 002_statsfs.patch: Sync.
+  * Provide a migration path from the old non-free unarj package.
+    (Closes: #182273)
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 13 Mar 2004 04:58:36 +0100
+
+arj (3.10.18-3) unstable; urgency=low
+
+  * The 'Happy New *RC*less Year' Release.
+  * Moved autotools updating logic to the clean target, but only update
+    the files. (Closes: #225688)
+
+ -- Guillem Jover <guillem@debian.org>  Thu,  1 Jan 2004 00:00:00 +0100
+
+arj (3.10.18-2) unstable; urgency=low
+
+  * Switched Maintainer and Co-Maintainer roles.
+  * Lowercase package description initial letter.
+  * Split diff patch:
+    - 000_fPIC.patch
+    - 001_arches_align.patch
+  * Added patch:
+    - 002_statsfs.patch: Include sys/statfs.h as it's not included in new
+      linux kernel header linux/fs.h. (Closes: #223135)
+      Thanks to Peter Hawkins <peter@hawkins.emu.id.au>.
+      Also switch from FIGETBSZ ioctl to statvfs, thus removing any linux
+      kernel header includes, that are breaking almost all builds lately.
+  * Use debian/patch.mk.
+  * Upgrade debhelper version to match DH_COMPAT.
+  * Move autotools update to an independent target.
+  * Move DH_COMPAT to debian/compat.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 10 Dec 2003 05:14:30 +0100
+
+arj (3.10.18-1) unstable; urgency=low
+
+  * New Upstream Release.
+    - Fixed unaligned memory accesses.
+  * Activate alignment support for ia64, hppa and arm.
+    (Closes: #203832, #192563)
+  * Build shared object with PIC flags.
+    Thanks Randolph Chung <tausq@debian.org>.
+  * debian/rules: Removed not used DDATE variable.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 23 Oct 2003 19:00:04 +0200
+
+arj (3.10.17-1) unstable; urgency=low
+
+  * New Upstream Release.
+  * debian/copyright: Reformatted.
+  * debian/rules: Changed misleading comment about stripping.
+  * Now using Standards-Version 3.6.1.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 18 Sep 2003 08:51:46 +0200
+
+arj (3.10.15-1) unstable; urgency=low
+
+  * New Upstream Release.
+  * Remove debian provided manpages as now they are integrated in upstream.
+  * Specify configure argument for mandir.
+  * Now using Standards-Version 3.6.0.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 30 Jul 2003 05:30:28 +0200
+
+arj (3.10g-1) unstable; urgency=low
+
+  * New Co-Maintainer.
+  * New Upstream Version.
+  * Added a watch file.
+  * Added /etc/rearj.cfg (Closes: #180874).
+  * Added arj crypto module.
+  * Do not strip the binaries, as it removes all self-extracting modules and
+    the help text appended to arj binary.
+  * Converted man pages from pod to nroff, also adapted to Unix systems, and
+    removed the build-dep on perl.
+  * Removed temporal debian directory.
+  * Do not include autoconf generated files, they are created at build time.
+  * Fixed build system, now honours DESTDIR.
+  * Use Makefile to install, thus allowig to build under non-linux systems.
+  * Fixed join command returning an undefined exit code (Closes: #187854).
+  * Now using Standards-Version 3.5.9.
+
+ -- Guillem Jover <guillem@debian.org>  Wed,  9 Apr 2003 21:55:10 +0200
+
+arj (3.10b-3) unstable; urgency=low
+
+  * Fixed build problem, closes: #179820.
+
+ -- Ola Lundqvist <opal@debian.org>  Sun,  6 Apr 2003 14:01:09 +0200
+
+arj (3.10b-2) unstable; urgency=low
+
+  * Added more build dependencies, closes: #179691.
+
+ -- Ola Lundqvist <opal@debian.org>  Tue,  4 Feb 2003 07:51:08 +0100
+
+arj (3.10b-1) unstable; urgency=low
+
+  * Initial release, closes: #178488.
+
+ -- Ola Lundqvist <opal@debian.org>  Mon, 27 Jan 2003 19:47:51 +0100

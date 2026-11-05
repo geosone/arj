@@ -6,6 +6,7 @@
  *
  */
 
+#include <stdint.h>
 #include "arj.h"
 
 /* Operations */
@@ -37,8 +38,9 @@ static unsigned short self_check[]={0x9090, 0x9090, 0x138, 0x9090, 0x9090};
 
 static char buf[PROC_BLOCK_SIZE];
 
-static void _fput_dword(const unsigned long l, FILE *stream)
+static void _fput_dword(const unsigned long w, FILE *stream)
 {
+ uint32_t l = (uint32_t)w;
 #ifdef WORDS_BIGENDIAN
  fputc(l    ,stream);
  fputc(l>>8 ,stream);

@@ -294,7 +294,7 @@
 {FARMSGS}  {M_REPLIES_HELP}         {MSG_ARJ, MSG_SFV, MSG_SFX}          {*}                     {}  {en, fr, de, ru}     {F} {"Yes, No, or Quit? ", "Oui, Non, ou Quitte ? ", "Ja, Nein, oder Abbruch? ", "Y=да, N=нет, Q=выход: "}
 {FARMSGS}  {M_ALL_REPLIES_HELP}     {MSG_ARJ, MSG_SFV}                   {*}                     {}  {en, fr, de, ru}     {F} {"Yes, No, Quit, Always, Skip, Global, Command? ", "Oui, Non, Quitte, Toujours, Passe, Global, Commande ? ", "Ja, Nein, Abbruch, Immer, Ъberspringen, Global, Kommando? ", "Y=да,\nN=нет,\nQ=выход,\nA=\"да\" на все последующие запросы,\nS=\"нет\" на все последующие запросы,\nG=\"да\" на все последующие запросы любого типа\nC=выполнение внешней команды\n? "}
 {FARMSGS}  {M_REPLIES}              {MSG_ARJ, MSG_SFV}                   {*}                     {}  {en, fr, de, ru}     {F} {"YNQASGC", "ONQTPGC", "JNAIБGK", "YNQASGC"}
-{FARMSGS}  {M_ARJ_BANNER}           {MSG_ARJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"@PRODUCT v %s%s, Copyright (c) 1998-2004, ARJ Software Russia. %s\n", "", "@PRODUCT v %s%s, Copyright (c) 1998-2004, ARJ Software Russia. %s\n", "@PRODUCT %s%s. Авторские права ARJ Software Russia. %s\n"}
+{FARMSGS}  {M_ARJ_BANNER}           {MSG_ARJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"@PRODUCT v %s%s, Copyright (c) 1998-2004, ARJ Software Russia.\n", "", "@PRODUCT v %s%s, Copyright (c) 1998-2004, ARJ Software Russia.\n", "@PRODUCT %s%s. Авторские права ARJ Software Russia.\n"}
 
 /*
  * OS-specific messages
@@ -474,7 +474,7 @@
  */
 
 {FARMSGS}  {M_WRONG_ENC_VERSION}    {MSG_SFV}                            {*}                     {}  {en, FR, de, ru}     {F} {"Wrong encryption version", "", "Falsche VerschlБsselungsversion", "Неподдерживаемый алгоритм шифрования"}
-{FARMSGS}  {M_ARJSFX_BANNER}        {MSG_SFV}                            {*}                     {}  {en, FR, de, ru}     {F} {"ARJSFXV %s - ARJ Archive Self-Extractor. %s -? for help.\nCopyright 1999-2004, ARJ Software Russia. All Rights Reserved. %s\n", "", "ARJSFXV %s - ARJ Archiv Selbst-Entpacker. %s -? for help.\nCopyright 1999-2004, ARJ Software Russia. Alle Rechte vorbehalten. %s\n", "Самораспаковывающийся архив ARJSFXV %s. Для справки наберите %s -?\n(C) 1998-2004, ARJ Software Russia. %s\n"}
+{FARMSGS}  {M_ARJSFX_BANNER}        {MSG_SFV}                            {*}                     {}  {en, FR, de, ru}     {F} {"ARJSFXV %s - ARJ Archive Self-Extractor. %s -? for help.\nCopyright 1999-2004, ARJ Software Russia. All Rights Reserved.\n", "", "ARJSFXV %s - ARJ Archiv Selbst-Entpacker. %s -? for help.\nCopyright 1999-2004, ARJ Software Russia. Alle Rechte vorbehalten.\n", "Самораспаковывающийся архив ARJSFXV %s. Для справки наберите %s -?\n(C) 1998-2004, ARJ Software Russia.\n"}
 {FARMSGS}  {M_SW_TABLE}             {MSG_SFV}                            {*}                     {}  {*}                  {F} {"ABCDEFGHIJKLMNOPRSTUVWXYZ?#&*$@!_"}
 {FARMSGS}  {M_SW_PARAMS}            {MSG_SFV}                            {*}                     {}  {*}                  {F} {"100000002000000010000000000010000"}
 {FARMSGS}  {M_JYSW_TABLE}           {MSG_SFV}                            {*}                     {}  {*}                  {F} {"ACKMNORV"}
@@ -585,7 +585,7 @@
 {FARMSGS}  {M_NO_INTEGRITY_PATTERN} {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"Program integrity is questionable!\n", "", "ProgrammintegritДt in fragwБrdig!\n", "Файл программы сжат либо поврежден\n"}
 {FARMSGS}  {M_INTEGRITY_VIOLATED}   {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"Program integrity is questionable!!\n", "", "ProgrammintegritДt in fragwБrdig!!\n", "Целостность программы под вопросом!\n"}
 {FARMSGS}  {M_INTEGRITY_OK}         {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"Program passes integrity check.\n", "", "Programm besteht IntegritДtsprБfung.\n", "Программа успешно прошла проверку на целостность.\n"}
-{FARMSGS}  {M_REARJ_BANNER}         {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"REARJ 2.43.02, Copyright (c) 1999-2004, ARJ Software Russia. %s\n", "", "REARJ 2.43.02, Copyright (c) 1999-2004, ARJ Software Russia. %s\n", "REARJ 2.43.02, (c) 1999-2004, ARJ Software Russia. %s\n"}
+{FARMSGS}  {M_REARJ_BANNER}         {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"REARJ 2.43.02, Copyright (c) 1999-2004, ARJ Software Russia.\n", "", "REARJ 2.43.02, Copyright (c) 1999-2004, ARJ Software Russia.\n", "REARJ 2.43.02, (c) 1999-2004, ARJ Software Russia.\n"}
 {FARMSGS}  {M_REARJ_COMMANDS}       {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {@hrej_en.txt, "", @hrej_de.txt, @hrej_ru.txt}
 {FARMSGS}  {M_REARJ_RCODES}         {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {@hrejc_en.txt, "", @hrejc_de.txt, @hrejc_ru.txt}
 {FARMSGS}  {M_CANTREAD}             {MSG_REJ}                            {*}                     {}  {en, FR, de, ru}     {F} {"End of file on input", "", "Eingabedatei zu Ende", "Преждевременный конец файла при чтении"}

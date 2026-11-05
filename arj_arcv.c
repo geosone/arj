@@ -59,27 +59,27 @@ static char idxid_fault[]="?";
 #define setup_hput(ptr) (tmp_hptr=(ptr))
 
 #define hget_byte() (*(tmp_hptr++)&0xFF)
-#define hput_byte(c) (*(tmp_hptr++)=(char) (c))
+#define hput_byte(c) (*(tmp_hptr++)=(uint8_t) (c))
 
 /* Reads two bytes from the header, incrementing the pointer */
 
-static unsigned int hget_word()
+static uint16_t hget_word()
 {
- unsigned int result;
+ uint16_t result;
 
  result=mget_word(tmp_hptr);
- tmp_hptr+=sizeof(short);
+ tmp_hptr+=sizeof(uint16_t);
  return result;
 }
 
 /* Reads four bytes from the header, incrementing the pointer */
 
-static unsigned long hget_longword()
+static uint32_t hget_longword()
 {
- unsigned long result;
+ uint32_t result;
 
  result=mget_dword(tmp_hptr);
- tmp_hptr+=sizeof(unsigned long);
+ tmp_hptr+=sizeof(uint32_t);
  return result;
 }
 
@@ -87,18 +87,18 @@ static unsigned long hget_longword()
 
 /* Writes two bytes to the header, incrementing the pointer */
 
-static void hput_word(unsigned int w)
+static void hput_word(uint16_t w)
 {
  mput_word(w,tmp_hptr); 
- tmp_hptr+=sizeof(unsigned short);
+ tmp_hptr+=sizeof(uint16_t);
 }
 
 /* Writes four bytes to the header, incrementing the pointer */
 
-static void hput_longword(unsigned long l)
+static void hput_longword(uint32_t l)
 {
  mput_dword(l,tmp_hptr);
- tmp_hptr+=sizeof(unsigned long);
+ tmp_hptr+=sizeof(uint32_t);
 }
 
 /* Calculates and stores the basic header size */
@@ -726,8 +726,16 @@ void create_header(int first)
   else
   {
    hput_longword(resume_position);
-   hput_longword(ts_native(&atime_stamp, host_os));
-   hput_longword(ts_native(&ctime_stamp, host_os));
+   if(ts_valid(secondary_ftime))
+   {
+    hput_longword(ts_native(&secondary_ftime, host_os));
+    hput_longword(ts_native(&secondary_ftime, host_os));
+   }
+   else
+   {
+    hput_longword(ts_native(&atime_stamp, host_os));
+    hput_longword(ts_native(&ctime_stamp, host_os));
+   }
    hput_longword(0L);
   }
  }
@@ -913,13 +921,13 @@ int supply_comment(char *cmtname, char *name)
     else
     {
      strcat(tmp_comment, tmp_cmtline);
-     strcat(tmp_comment, lf);
+     strcat(tmp_comment, "\n");
     }
    }
    else
    {
     strcat(tmp_comment, tmp_cmtline);
-    strcat(tmp_comment, lf);
+    strcat(tmp_comment, "\n");
    }
   }
  }
@@ -1846,7 +1854,7 @@ int pack_file(int is_update, int is_replace)
    raw_eh=eh_lookup(eh, UXSPECIAL_ID)->raw;
    uxspecial_stats(raw_eh, UXSTATS_SHORT);
   }
-  msg_cprintf(0, lf);
+  msg_cprintf(0, "\n");
  }
  if(err_id==0&&user_wants_fail)
  {
@@ -2523,9 +2531,9 @@ int unpack_validation()
    {
     msg_cprintf(0, (FMSG *)strform, misc_buf);
     if(search_mode==SEARCH_DEFAULT)
-     msg_cprintf(0, (FMSG *)lf);
+     msg_cprintf(0, "\n");
     if(search_mode==SEARCH_BRIEF)
-     msg_cprintf(0, (FMSG *)cr);
+     msg_cprintf(0, "\r");
    }
    for(pattern=0; pattern<SEARCH_STR_MAX; search_occurences[pattern++]=0);
    reserve_size=0;
@@ -3652,7 +3660,7 @@ void archive_cleanup()
  {
   if(msg_fprintf(idxstream, M_TESTING, archive_name)<0)
    error(M_DISK_FULL);
-  if(fprintf(idxstream, lf)<0)
+  if(fprintf(idxstream, "\n")<0)
    error(M_DISK_FULL);
  }
  cmd_verb=ARJ_CMD_TEST;

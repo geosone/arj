@@ -1,0 +1,53 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE = 1
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all abi=+lfs
+export DEB_CPPFLAGS_FOR_BUILD_MAINT_APPEND = -D_GNU_SOURCE=1
+export DEB_CPPFLAGS_MAINT_APPEND = -D_GNU_SOURCE=1
+export DEB_CFLAGS_FOR_BUILD_MAINT_APPEND = -Wall
+export DEB_CFLAGS_MAINT_APPEND = -Wall
+
+include /usr/share/dpkg/default.mk
+
+DESTDIR = $(CURDIR)/debian/arj
+
+INSTALL = install
+INSTALL_DATA = $(INSTALL) -m 644
+
+ifneq (,$(filter debug,$(DEB_BUILD_OPTIONS)))
+  buildvars += "DEBUG=1"
+endif
+
+ifeq (,$(filter nostrip,$(DEB_BUILD_OPTIONS)))
+  buildvars += "BUILD_STRIP=1"
+endif
+
+%:
+	dh $@
+
+execute_before_dh_auto_clean:
+	rm -f makefile
+
+override_dh_autoreconf:
+	dh_autoreconf --sourcedirectory=gnu
+
+override_dh_auto_configure:
+	dh_auto_configure --sourcedirectory=gnu
+
+override_dh_auto_build:
+	dh_auto_build -- $(buildvars)
+
+execute_after_dh_auto_install:
+	$(INSTALL_DATA) $(CURDIR)/resource/rearj.cfg.example \
+			$(DESTDIR)/etc/rearj.cfg
+
+override_dh_strip:
+	# NOTE: Do not strip here, it is currently done in the upstream build
+	# system, after the linker stage and before preprocessing the binary
+	# files. Otherwise when stripping the self-extracting modules and the
+	# help text are removed.
+
+override_dh_installchangelogs:
+	dh_installchangelogs --no-trim

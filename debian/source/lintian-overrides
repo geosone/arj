@@ -1,0 +1,4 @@
+# Upstream does not sign releases.
+arj: debian-watch-does-not-check-openpgp-signature [debian/watch]
+# Localization catalog.
+arj: very-long-line-length-in-source-file * > 512 [resource/resource.txt:*]

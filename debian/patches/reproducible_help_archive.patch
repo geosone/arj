@@ -1,0 +1,53 @@
+Author: Guillem Jover <guillem@debian.org
+Description: Force the timestamp for the help.arj embedded in the executable
+ to the date from SOURCE_DATE_EPOCH, and use DOS mode, to avoid recording
+ the UNIX file attributes, to generate a reproducible archive.
+ Make the -hdo option also affect the stored atime and ctime.
+Forwarded: no
+
+---
+ arj_arcv.c      |   12 ++++++++++--
+ gnu/makefile.in |    4 +++-
+ 2 files changed, 13 insertions(+), 3 deletions(-)
+
+--- a/gnu/makefile.in
++++ b/gnu/makefile.in
+@@ -61,6 +61,8 @@ else
+ STRIP = :
+ endif
+ 
++ARJ_TIMESTAMP = $(shell TZ=UTC0 date -d '@$(SOURCE_DATE_EPOCH)' '+%Y%m%d%H%S')
++
+ ALL_CFLAGS += @CPPFLAGS@ $(CPPFLAGS) @CFLAGS@ $(CFLAGS)
+ 
+ # Build Installation paths
+@@ -363,7 +365,7 @@ $(ARJ_DIR)/arj$x: $(ARJ_OBJS) \
+ 	$(TOOLS_DIR)/join $(ARJ_DIR)/arj$x $(ARJSFXV_DIR)/arjsfxv$x
+ 	$(TOOLS_DIR)/join $(ARJ_DIR)/arj$x $(SFXSTUB_DIR)/sfxstub$x
+ 	rm -f $(BASEDIR)/help.arj
+-	$(ARJ_DIR)/arj$x a $(BASEDIR)/help.arj -+ -t1f -2e -e -jm -jh65535 -jt $(RES_DIR)/$(LOCALE)/arj?.txt
++	TZ=UTC0 $(ARJ_DIR)/arj$x a $(BASEDIR)/help.arj -+ -t1f -2d -e -jm -jh65535 -jt -hdo$(ARJ_TIMESTAMP) $(RES_DIR)/$(LOCALE)/arj?.txt
+ 	$(TOOLS_DIR)/join $(ARJ_DIR)/arj$x $(BASEDIR)/help.arj
+ 	$(TOOLS_DIR)/postproc $@
+ 
+--- a/arj_arcv.c
++++ b/arj_arcv.c
+@@ -726,8 +726,16 @@ void create_header(int first)
+   else
+   {
+    hput_longword(resume_position);
+-   hput_longword(ts_native(&atime_stamp, host_os));
+-   hput_longword(ts_native(&ctime_stamp, host_os));
++   if(ts_valid(secondary_ftime))
++   {
++    hput_longword(ts_native(&secondary_ftime, host_os));
++    hput_longword(ts_native(&secondary_ftime, host_os));
++   }
++   else
++   {
++    hput_longword(ts_native(&atime_stamp, host_os));
++    hput_longword(ts_native(&ctime_stamp, host_os));
++   }
+    hput_longword(0L);
+   }
+  }

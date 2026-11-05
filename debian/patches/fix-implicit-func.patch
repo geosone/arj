@@ -1,0 +1,21 @@
+Description: Add missing header to get function prototypes
+ Otherwise gcc now emits errors due to missing function declarations.
+Author: Guillem Jover <guillem@debian.org>
+Origin: vendor
+Forwarded: no
+Last-Update: 2024-05-12
+
+---
+ environ.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/environ.c
++++ b/environ.c
+@@ -54,6 +54,7 @@
+  #include <utime.h>
+  #include <sys/time.h>                  /* LIBC high-resolution timing */
+  #include <sys/resource.h>              /* Priority control */
++ #include <sys/wait.h>
+  #if defined(linux)
+   #include <sys/ioctl.h>
+   #include <sys/statfs.h>
