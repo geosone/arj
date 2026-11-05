@@ -537,7 +537,7 @@ int set_ea(char FAR *i_eas, char *name)
    {
     memset(&w32sid, 0, sizeof(w32sid));
     w32sid.dwStreamId=BACKUP_EA_DATA;
-    w32sid.Size.LowPart=stream_len=(((char FAR *)pfeal)-streambuf);
+    w32sid.Size.LowPart=stream_len=(((char FAR *)pfeal)-(char FAR *)streambuf);
     if(create_stream(&w32sid, sid)||write_stream(streambuf, stream_len, sid)<stream_len)
      rc=-1;
     close_streams(sid);

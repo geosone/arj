@@ -814,7 +814,11 @@ extern char root_wildcard[];
 
 /* "Year 2038" workaround. */
 
-#if (defined(LIBC)&&TARGET==OS2)||TARGET==WIN32
+/* Win64 has a 64-bit time_t and a 32-bit long: the folding routine's
+   (time_t *)&unsigned_long casts would read past its variable there, and the
+   64-bit CRT handles these dates natively. Keep the workaround for 32-bit
+   time_t only. */
+#if (defined(LIBC)&&TARGET==OS2)||(TARGET==WIN32&&!defined(_WIN64))
  /* Certain LIBC runtimes fail to do localtime() properly when the time
     argument exceeds 0x80000000 (a "year 2038" problem). So there is a
     workaround routine, arj_localtime(), to help with this. */
@@ -989,5 +993,11 @@ int file_copy(char *dest, char *src, int chk);
 #endif /* !ARJSFXJR */
 
 int file_setftime_on_hf(int hf, unsigned long ftime);
+
+/* ENVIRON.C defines file_setftime() for the Win32 ARJSFXJR as well
+   (NEED_SETFTIME_HACK), but its prototype above is outside this module. */
+#if SFX_LEVEL==ARJSFXJR&&TARGET==WIN32
+ int file_setftime(char *name, unsigned long ftime);
+#endif
 
 #endif

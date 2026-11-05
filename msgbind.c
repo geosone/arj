@@ -54,10 +54,12 @@ struct pool
  unsigned long crc32;
 };
 
-/* A Q&D emulation of the strupr() and strlwr() for those who don't have it */
+/* A Q&D emulation of the strupr() and strlwr(). msgbind runs on the build
+   host; in a cross build it shares the target's c_defs.h, so HAVE_STRLWR and
+   HAVE_STRUPR may describe the target C library (e.g. MinGW) rather than the
+   host's. Always use these local helpers instead. */
 
-#ifndef HAVE_STRLWR
-static char *strlwr(char *str)
+static char *msgbind_strlwr(char *str)
 {
  char *p;
 
@@ -65,10 +67,8 @@ static char *strlwr(char *str)
   *p=tolower(*p);
  return(str);
 }
-#endif
 
-#ifndef HAVE_STRUPR
-static char *strupr(char *str)
+static char *msgbind_strupr(char *str)
 {
  char *p;
 
@@ -76,7 +76,11 @@ static char *strupr(char *str)
   *p=toupper(*p);
  return(str);
 }
-#endif
+
+#undef strlwr
+#undef strupr
+#define strlwr msgbind_strlwr
+#define strupr msgbind_strupr
 
 /* Remove given characters */
 

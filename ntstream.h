@@ -11,7 +11,27 @@
 
 #if TARGET==WIN32
 
+#ifdef __MINGW32__
+/* largeint.h came with old Win32 SDKs and is absent from MinGW-w64. Provide
+   the two helpers NTSTREAM.C uses, on LARGE_INTEGER.QuadPart (signed 64-bit). */
+static __inline LARGE_INTEGER ConvertUlongToLargeInteger(ULONG value)
+{
+ LARGE_INTEGER result;
+
+ result.QuadPart=(LONGLONG)value;
+ return(result);
+}
+
+static __inline LARGE_INTEGER LargeIntegerSubtract(LARGE_INTEGER minuend, LARGE_INTEGER subtrahend)
+{
+ LARGE_INTEGER result;
+
+ result.QuadPart=minuend.QuadPart-subtrahend.QuadPart;
+ return(result);
+}
+#else
 #include <largeint.h>
+#endif
 
 /* Read/write (backup/restore) modes */
 

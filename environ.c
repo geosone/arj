@@ -18,7 +18,7 @@
 
 #if COMPILER==BCC
  #include <dir.h>
-#elif COMPILER==MSC||COMPILER==MSVC||COMPILER==ICC
+#elif COMPILER==MSC||COMPILER==MSVC||COMPILER==ICC||defined(__MINGW32__)
  #include <direct.h>
 #endif
 
@@ -26,7 +26,8 @@
  #include <share.h>
 #endif
 
-#if COMPILER==MSC||COMPILER==MSVC||COMPILER==ICC||COMPILER==HIGHC||defined(__EMX__)||(TARGET==OS2&&defined(LIBC))
+/* MinGW-w64 uses the Microsoft CRT headers, like MSVC */
+#if COMPILER==MSC||COMPILER==MSVC||COMPILER==ICC||COMPILER==HIGHC||defined(__EMX__)||(TARGET==OS2&&defined(LIBC))||defined(__MINGW32__)
  #include <sys/types.h>
  #include <sys/stat.h>
  #if COMPILER==HIGHC&&!defined(LIBC)
