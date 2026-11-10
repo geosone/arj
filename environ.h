@@ -233,6 +233,11 @@
  #define filelength      _filelength
  #define fcloseall        _fcloseall
 #endif
+/* mingw-w64 11 (Ubuntu 24.04) has no fcloseall in its import libraries,
+   only the msvcrt name _fcloseall, which every mingw-w64 version exports. */
+#if defined(__MINGW32__)
+ #define fcloseall        _fcloseall
+#endif
 #if COMPILER==BCC||COMPILER==MSC
  #define _lseek                lseek
 #endif
