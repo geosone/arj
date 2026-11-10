@@ -31,8 +31,10 @@ fixes are covered by Debian (`006_use_safe_strcpy`, `003_64_bit_clean`). Its
   workaround stays limited to Win32 without `_WIN64`.
 - Extraction refuses member names that would leave the target directory. The
   Debian traversal patch strips a leading `../` or separator, but a name such
-  as `a/../../x` was still written two levels above the target by `arj x`
-  (reproduced with Debian's arj 3.10.22-28). On Windows, names containing
+  as `a/../../x` was still written one level above the target by `arj x`,
+  each further `..` one more (reproduced with Debian's arj 3.10.22-28 and
+  -29; reported as [Debian bug #1153489](https://bugs.debian.org/1153489),
+  where the generic part of this fix is attached). On Windows, names containing
   drive or stream colons, reserved characters, control characters, components
   ending in a dot or space, or device names (`CON`, `NUL`, `COM1`, ...) are
   refused too. A refused member is reported as skipped and counts as an error.
@@ -88,6 +90,15 @@ from CMD and PowerShell and exact PATH restoration on uninstall.
 
 Native Windows 10 x86 and x64, Linux, and Debian arj 3.10.22-28 interop tests
 passed on 2026-11-05.
+
+## Releases
+
+- 3.10.22-1 (2026-11-05): binary-only MSIs on bbs.disconnected-by-peer.at,
+  published while the traversal report was private; never a GitHub release.
+- 3.10.22-2: first public release with matching source, built by CI from
+  this repository. -1 was packaged by an unpublished variant of
+  `new_windows_msi.ps1` and cannot be rebuilt from here, so the version was
+  not reused.
 
 ## Limits
 

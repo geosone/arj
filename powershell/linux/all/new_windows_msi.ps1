@@ -34,7 +34,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 # One place for the release number: file names, MSI version and notes.
-$release = 1
+$release = 2
 $version = "3.10.22-$release"
 $msiVersion = '3.10.' + (2200 + $release)
 

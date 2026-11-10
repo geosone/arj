@@ -11,7 +11,7 @@ import shutil
 import sys
 import zipfile
 
-VERSION = '3.10.22-1'
+VERSION = '3.10.22-2'
 MEMBERS = (
     'arj.exe',
     'rearj.exe',
